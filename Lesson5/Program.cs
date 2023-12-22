@@ -89,9 +89,9 @@ for (int i = 0; i < matrix.GetLength(0); i++)
     return sumArray;
 }
 
-int MinimumElementInArray(int[] array)
+void MinimumElementInArray(int[] array, out int lineindex)
 {
-int lineindex = 0;
+lineindex = 0;
 int minimum = 0;
 for (int i = 0; i < array.Length; i++)
     {
@@ -100,8 +100,6 @@ for (int i = 0; i < array.Length; i++)
         lineindex = i;
         }
     }
-    return lineindex;
-    // System.Console.WriteLine($"Номер строки с минимальной суммой: {lineindex}");
 }
 
 
@@ -141,9 +139,108 @@ int[,] myMatrix3 = GenerateMatrix(rows3, cols3, 1, 100);
 
 PrintMatrix(myMatrix3);
 
-int line = MinimumElementInArray(MinimumSumInRow(myMatrix3));
-System.Console.WriteLine($"Строка с минимальной суммой: {line}");
+MinimumElementInArray(MinimumSumInRow(myMatrix3), out int line);
+System.Console.WriteLine($"Задача 3: Строка с минимальной суммой: {line}");
+
+// Не получилось добиться, чтобы выводился номер строки с минимальный элементом.
+// Выводится значение переменной, заданное при инициализации, то есть 0.
 
 // System.Console.WriteLine("Задача 3. Номер строки с минимальной суммой элементов: " + line);
 
-// Задача 4*(не обязательная): Задайте двумерный массив из целых чисел. Напишите программу, которая удалит строку и столбец, на пересечении которых расположен наименьший элемент массива. Под удалением понимается создание нового двумерного массива без строки и столбца
+// Задача 4*(не обязательная): Задайте двумерный массив из целых чисел. 
+// Напишите программу, которая удалит строку и столбец, на пересечении которых расположен наименьший элемент массива. 
+// Под удалением понимается создание нового двумерного массива без строки и столбца
+
+// !!!!!!!!!!!!!!!!!!!! ref out in - модификаторы для работы со значимыми и ссылочными данными
+
+
+// void FindMinNumberIndexRef(ref int number) // ref передача значения по ссылке
+// {
+//     number += 10;
+//     // int xy = new int{1, 2}; // для возвращения двух значений в виде одномерного массива
+//     // return xy;
+// }
+
+// int FindMinNumberIndexOut(out int number) // ref передача значения по ссылке
+// {
+//     int number = 0; // out сначала нужно объявить переменную, потом изменить
+//     number += 10;
+// }
+
+// void FindMinNumberIndexIn(in int numberin) // in передача значения по ссылке
+// {
+//     int test = numberin; // можно ее значение присвоить другой переменной
+//     System.Console.WriteLine($"numberin: {numberin}");
+//     // number += 10; // Нельзя изменять переменную, она только для чтения
+// }
+
+// int numref = 0;
+// FindMinNumberIndexRef(ref numref); // ref передает в функцию не значение, а ссылку на значение
+// System.Console.WriteLine($"ref numref: {numref}");
+
+// FindMinNumberIndexOut(out numout); // out извлекает из функции значение переменной, которая задается внутри функции
+// System.Console.WriteLine($"out numout: {numout}");
+
+// int numin = 0;
+// FindMinNumberIndexIn(in numin); // in только для чтения, изменять нельзя
+// System.Console.WriteLine($"out numin: {numin}");
+
+void FindMinNumberIndexes(int[,] matrix22, out int miniIndex, out int minjIndex) // iIndex, jIndex для извлечения индексов
+{
+    miniIndex = 0; // out нужно задать значение переменных, значения которых извлекаются из функции
+    minjIndex = 0;
+    for (int i = 0; i < matrix22.GetLength(0); i++)
+    {
+        for (int j = 0; j < matrix22.GetLength(1); j++)
+        {
+            if (matrix22[i,j] < matrix22[miniIndex, minjIndex])
+            {
+                miniIndex = i; // присваиваем индекс минимального элемента
+                minjIndex = j;
+            }
+        }
+    }
+}
+
+////// ОПЕРАТОРЫ ПЕРЕХОДА
+// return - прерывает фукнцию, возвращает значение
+// continue - прерывает текущую операции и переходит к следующей. пропускает итерацию цикла
+// break - прерывает цикл, ничего не возвращает, функция продолжает работать
+// goto - создается метка m: и переход к ней goto m;
+
+// Вариант с тернарными операторами рассмотрен в семинаре Урок 6. Массивы и строки
+// https://gb.ru/lessons/383923
+
+int[,] DeleteRowAndCol(int[,] matrixToDelete, int iMin, int jMin)
+{
+    int[,] newMatrix = new int[matrixToDelete.GetLength(0) - 1, matrixToDelete.GetLength(1) - 1];
+
+    for (int i = 0, x = 0; i < matrixToDelete.GetLength(0); i++) // i, x - счетчики
+    {
+        if(i == iMin) continue; // пропуск строки с минимальным элементом
+
+        for (int j = 0, y = 0; j < matrixToDelete.GetLength(1); j++) // j, y - счетчики
+        {
+            if(j == jMin) continue; // пропуск столбца с минимальным элементом
+            newMatrix[x,y] = matrixToDelete[i,j];
+            y++;
+        }
+        x++;
+    }
+    return newMatrix;
+}
+
+
+// ---------------------------
+int[,] oldMatrix = GenerateMatrix(5, 7, -10, 10);
+PrintMatrix(oldMatrix);
+FindMinNumberIndexes(oldMatrix, out int iMin, out int jMin);
+System.Console.WriteLine($"iMin: {iMin} jMin: {jMin}");
+PrintMatrix(DeleteRowAndCol(oldMatrix, iMin, jMin));
+
+/// ТЕРНАРНЫЕ ОПЕРАТОРЫ
+// int a = 13;
+// int b = 7;
+// int result = a > b ? a * b : a + b; // если a > b, то умножение, если не выполняется, то сложение
+// System.Console.WriteLine(result);
+
