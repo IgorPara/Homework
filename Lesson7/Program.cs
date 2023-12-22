@@ -91,6 +91,8 @@ int [] array = GenerateArray(size, -10, 10);
 PrintArray(array);
 System.Console.WriteLine();
 
-print(array);   
+print(array);
+System.Console.WriteLine();
+
 
 
