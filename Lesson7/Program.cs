@@ -73,18 +73,6 @@ void PrintArray(int[] arrayForPrint)
     }
 }
 
-// int [] ReverseArray(int [] array, int index = 5)
-//         {
-//             if (index <= 0)
-//             {
-//                 System.Console.Write(array[index-1] + " ");
-//                 ReverseArray(array, index--);
-//             }        
-//             // int temp = array[index];
-//             // array[index] = array[array.Length - index-1];
-//             // array[array.Length - index-1] = temp;
-//             // return ReverseArray(array, index -= 2);
-//         }
 
 void print(int[] array, int first = 0)
 {
